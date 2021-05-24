@@ -1,5 +1,5 @@
-require('dotenv').config();
-const clientId = process.env.clientId;
+import { trackPromise } from 'react-promise-tracker';
+const clientId = process.env.REACT_APP_clientId;
 const redirectURI = 'http://localhost:3000/';
 let accessToken;
 const Spotify = {
@@ -23,10 +23,10 @@ const Spotify = {
         }
 
     },
-
     search(term){
         const accessToken = Spotify.getAccessToken();
-        return fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
+        return trackPromise(
+        fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
@@ -42,9 +42,11 @@ const Spotify = {
                 name: track.name,
                 artists: track.artists[0].name,
                 album: track.album.name,
-                uri: track.uri
+                uri: track.uri,
+                preview: track.preview_url,
+                image: track.album.images[2].url
             }));
-        });
+        }));
     },
 
  
@@ -82,5 +84,4 @@ const Spotify = {
         }) // end of userId response
     } // of savePlaylist method
 }; // end of spotify function expression 
-
 export default Spotify;

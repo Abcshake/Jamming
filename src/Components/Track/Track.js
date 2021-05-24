@@ -1,5 +1,6 @@
 import React from 'react';
-
+import './Track.css';
+import ReactAudioPlayer from 'react-audio-player';
 class Track extends React.Component {
     constructor(props){
         super(props);
@@ -17,16 +18,31 @@ class Track extends React.Component {
         if(isRemoval) {
             return <button className="Track-action" onClick={this.removeTrack}>-</button>
         } 
-            return <button className="Track-action" onClick={this.addTrack}>+</button>
+            return <button className="Track-action" font-size="16px" onClick={this.addTrack}>+</button>
     }
     render() {
+        const hasPreview = this.props.track.preview;
+        let audioPlayer;
+        if(hasPreview === null){
+            audioPlayer = <p>This track has no preview</p>
+        } else {
+            audioPlayer = <ReactAudioPlayer 
+                    src={this.props.track.preview}
+                    controls = 'true' 
+                />
+        }
         return (
         <div className="Track">
             <div className="Track-information">
                 <h3>{this.props.track.name}</h3>
                 <p>{this.props.track.artist} | {this.props.track.album}</p>
+                {audioPlayer}
+                <img src={this.props.track.image} alt="album image"></img>
+                
             </div>
-            {this.renderAction()}
+            <div className="Track-action">
+             {this.renderAction()}
+            </div>
         </div>
         );
     }
